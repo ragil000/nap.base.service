@@ -1,0 +1,36 @@
+{
+  "name": "email_service",
+  "version": "1.0.0",
+  "description": "email service for notification app",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ragil000/nap.email.service.git"
+  },
+  "keywords": [
+    "nap",
+    "email",
+    "service",
+    "emailer",
+    "notification"
+  ],
+  "author": "RMY",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ragil000/nap.email.service/issues"
+  },
+  "homepage": "https://github.com/ragil000/nap.email.service#readme",
+  "dependencies": {
+    "amqplib": "^0.7.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "mailer": "^0.6.7",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.4.11"
+  }
+}
