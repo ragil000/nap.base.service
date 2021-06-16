@@ -1,21 +1,20 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 
-const test = require('./app/controllers/test')
-// const accountRoute = require('./api/routes/accountRoute')
+const accountRoute = require('./app/routes/accountRoute')
+const scheduleRoute = require('./app/routes/scheduleRoute')
 
 const mongodbUri = process.env.MONGODB_URL 
 mongoose.connect(`mongodb:${mongodbUri}`, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 mongoose.Promise = global.Promise
 
 app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
-app.use(bodyParser.json())
+app.use(express.json())
 app.use('/publics', express.static('publics'))
 
 // handle CORS
@@ -29,10 +28,12 @@ app.use((request, response, next) => {
     next()
 })
 
-// test.send()
+app.use('/account', accountRoute)
+app.use('/schedule', scheduleRoute)
 
 // handle error
 app.use((request, response, next) => {
+    // console.log('ini', accountRoute)
     const error = new Error('Not found')
     error.status = 404
     next(error)

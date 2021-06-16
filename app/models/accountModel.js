@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const mongoosePaginate = require('mongoose-paginate-v2')
 const { isEmail } = require('validator')
 
-const accountSchema = mongoose.Schema({
+const schemaModel = mongoose.Schema({
     email: {
         type: String,
         unique: [true, 'Email already exist'],
@@ -37,8 +37,8 @@ const accountSchema = mongoose.Schema({
     timestamps: true
 })
 
-accountSchema.plugin(mongoosePaginate)
+schemaModel.plugin(mongoosePaginate)
 
-const Account = mongoose.model('Account', accountSchema)
-Account.paginate().then({})
-module.exports = Account
+const newSchema = mongoose.model('Account', schemaModel)
+newSchema.paginate().then({})
+module.exports = newSchema
