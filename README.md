@@ -39,5 +39,138 @@ JWT_KEY=penyihir-jahat
 2. Kemudian jalankan service ini menggunakan perintah `nodemon server`.
 3. Kemudian lanjutkan untuk menginstall dan menjalankan [service email](https://github.com/ragil000/nap.email.service "service email").
 
+### DAFTAR ENDPOINT
+```javascript
+=> Account
+	- /account/signup
+		method: POST
+		body {
+			"email": "string [format email]", // wajib
+			"password": "string", // wajib
+			"role": "string [pilih salah satu: user/superAdmin]" // tidak wajib, default "user"
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]"
+		}
+		
+	- /account/signin
+		method: POST
+		body {
+			"email": "string [format email]", // wajib
+			"password": "string", // wajib
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]"
+		}
+		
+	- /account
+		method: GET
+		params {
+			"page": "integer", // tidak wajib, default 1
+			"limit": "integer", // tidak wajib, default 10
+			"id": "object ID" // tidak wajib, saat di set akan memberikan response detail
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+	- /account
+		method: PUT
+		params {
+			"id": "object ID" // wajib
+		}
+		body {
+			"email": "string [format email]", // wajib
+			"password": "string", // wajib
+			"role": "string [pilih salah satu: user/superAdmin]" // tidak wajib
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+	- /account
+		method: DELETE
+		params {
+			"id": "object ID", // wajib
+			"hard": "string" // tidak wajib, saat di set "yes" maka akan menghapus data dari database, jika tidak diisi data tidak hilang dalam database tapi tidak ditampilkan
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+=> Schedule
+	- /schedule
+		method: POST
+		body {
+			"receivers": "array", // wajib, isisnya array string berupa email atau nomor whatsapp
+			"message": "string", // wajib
+			"platform": "string [pilih salah satu: email/whatsapp]", // wajib
+			"scheduleType": "string, [pilih salah satu: repeated/nonRepeated]", // wajib
+			"hours": "integer", // wajib
+			"minutes": "integer", // wajib
+			"days": "string/array", // wajib, bisa string date jika scheduleType=nonRepeated dan array string jika scheduleType=repeated berisi nama hari dalam bahasa inggris
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+	- /schedule
+		method: PUT
+		params {
+			"id": "object ID" // wajib
+		}
+		body {
+			"receivers": "array", // wajib, isisnya array string berupa email atau nomor whatsapp
+			"message": "string", // wajib
+			"platform": "string [pilih salah satu: email/whatsapp]", // wajib
+			"scheduleType": "string, [pilih salah satu: repeated/nonRepeated]", // wajib
+			"hours": "integer", // wajib
+			"minutes": "integer", // wajib
+			"days": "string/array", // wajib, bisa string date jika scheduleType=nonRepeated dan array string jika scheduleType=repeated berisi nama hari dalam bahasa inggris
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+	- /schedule
+		method: DELETE
+		params {
+			"id": "object ID", // wajib
+			"hard": "string" // tidak wajib, saat di set "yes" maka akan menghapus data dari database, jika tidak diisi data tidak hilang dalam database tapi tidak ditampilkan
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+		
+	- /schedule
+		method: GET
+		params {
+			"page": "integer", // tidak wajib, default 1
+			"limit": "integer", // tidak wajib, default 10
+			"id": "object ID", // tidak wajib, saat di set akan memberikan response detail
+			"self": "string", // tidak wajib, saat di set "yes" maka akan memfilter hanya schedule yang aktif saja yang ditampilkan
+			"repeated": "string" // tidak wajib, saat di set "yes" maka akan memfilter hanya schedule yang berulang saja yang ditampilkan
+		}
+		header {
+			"Content-Type": "application/json",
+			"X-API-KEY": "[API KEY yang kamu set di service utama]",
+			"Authorization": "Bearer [token yang didapat dari endpoint /account/signin]"
+		}
+```
+
 ### LISENSI
 Anda diperbolehkan menggunakan proyek ini secara bebas, termasuk juga yang bersifat komersil (tidak termasuk template yang saya gunakan).
