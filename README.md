@@ -37,7 +37,7 @@ JWT_KEY=penyihir-jahat
 ### MENJALANKAN
 1. Sebaiknya menggunakan *nodemon* untuk menjalankan service ini. Install *nodemon* menggunakan perintah `npm install -g nodemon`.
 2. Kemudian jalankan service ini menggunakan perintah `nodemon server`.
-3. Kemudian lanjutkan untuk menginstall dan menjalankan [service email](https://github.com/ragil000/nap.email.service "service email"), [service whatsapp](https://github.com/ragil000/nap.wa.service "service whatsapp") dan [service frontend](https://github.com/ragil000/nap.front.service "service frontend").
+3. Kemudian lanjutkan untuk menginstall dan menjalankan [service email](https://github.com/ragil000/nap.email.service "service email").
 
 ### LISENSI
 Anda diperbolehkan menggunakan proyek ini secara bebas, termasuk juga yang bersifat komersil (tidak termasuk template yang saya gunakan).
