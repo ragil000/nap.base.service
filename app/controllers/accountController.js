@@ -51,7 +51,7 @@ exports.account_get = async (request, response, next) => {
                 })
             }
         }else {
-            getData = await Account.paginate({ softDelete: null }, { page: page, limit: limit })
+            getData = await Account.paginate({ _id: { $ne: response.accountData.id }, softDelete: null }, { page: page, limit: limit })
             if(getData.docs.length) {
                 response.status(200).json({
                     status: true,
@@ -93,7 +93,7 @@ exports.account_get = async (request, response, next) => {
 
 exports.account_signup = async (request, response, next) => {
     try {
-        const findUsername = await Account.findOne({ email: sanitize(request.body.email) })
+        const findUsername = await Account.findOne({ email: sanitize(request.body.email), softDelete: null })
         if(findUsername) {
             return response.status(409).json({
                 status: false,
@@ -108,6 +108,8 @@ exports.account_signup = async (request, response, next) => {
                     const createData = await Account.create({
                         email: sanitize(request.body.email),
                         password: passwordHash,
+                        role: sanitize(request.body.role),
+                        status: 'active',
                         token: token
                     })
                     if(createData) {
@@ -120,6 +122,8 @@ exports.account_signup = async (request, response, next) => {
                                 data: {
                                     _id: createData._id,
                                     email: createData.email,
+                                    role: createData.role,
+                                    status: createData.status,
                                     token: createData.token
                                 }
                             })
@@ -215,6 +219,7 @@ exports.account_signin = async (request, response, next) => {
                         response.status(200).json({
                             status: true,
                             token: token,
+                            email: findEmail.email,
                             accountStatus: findEmail.status,
                             accountRole: findEmail.role,
                             message: 'Auth successful'

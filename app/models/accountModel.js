@@ -5,7 +5,6 @@ const { isEmail } = require('validator')
 const schemaModel = mongoose.Schema({
     email: {
         type: String,
-        unique: [true, 'Email already exist'],
         required: [true, 'Email cannot be empty'],
         validate: [isEmail, 'Email not valid']
     },

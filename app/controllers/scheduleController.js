@@ -10,6 +10,9 @@ exports.read = async (request, response, next) => {
         const page = request.query.page || 1
         const limit = request.query.limit || 10
         const id = request.query.id || null
+        const self = request.query.self || null
+        const active = request.query.active || null
+        const repeated = request.query.repeated || null
 
         let readData
         if(id) {
@@ -25,6 +28,8 @@ exports.read = async (request, response, next) => {
                         platform: readData.platform,
                         scheduleType: readData.scheduleType,
                         scheduleTime: readData.scheduleTime,
+                        status: readData.status,
+                        lastSent: readData.lastSent,
                         createdBy: readData.createdBy ? readData.createdBy.email : null,
                         createdAt: RmyHelpers.mongooseTimestampToGMT(readData.createdAt),
                         updatedAt: RmyHelpers.mongooseTimestampToGMT(readData.updatedAt)
@@ -37,9 +42,18 @@ exports.read = async (request, response, next) => {
                 })
             }
         }else {
-            readData = await Model.paginate({ softDelete: null }, { page: page, limit: limit, populate: {
+            let query = {}
+            query.softDelete = null
+            if(self == 'yes') query.createdBy = response.accountData.id
+            if(active == 'yes') query.status = 'active'
+            if(repeated == 'yes') query.scheduleType = 'repeated'
+            readData = await Model.paginate(query, { page: page, limit: limit, populate: {
                     path: 'createdBy',
                     model: 'Account'
+                }, sort:{
+                    status: 'asc',
+                    receiversCount: 'asc',
+                    createdAt: 'desc'
                 }
             })
             if(readData.docs.length) {
@@ -54,6 +68,8 @@ exports.read = async (request, response, next) => {
                             platform: data.platform,
                             scheduleType: data.scheduleType,
                             scheduleTime: data.scheduleTime,
+                            status: data.status,
+                            lastSent: data.lastSent,
                             createdBy: data.createdBy ? data.createdBy.email : null,
                             createdAt: RmyHelpers.mongooseTimestampToGMT(data.createdAt),
                             updatedAt: RmyHelpers.mongooseTimestampToGMT(data.updatedAt)
@@ -110,6 +126,7 @@ exports.create = async (request, response, next) => {
 exports.update = async (request, response, next) => {
     try {
         const id = request.query.id || null
+        const put = request.query.put || null
         if(!id) {
             return response.status(400).json({
                 status: false,
@@ -119,18 +136,27 @@ exports.update = async (request, response, next) => {
 
         const checkId = await Model.findOne({ _id: mongoose.Types.ObjectId(id), softDelete: null })
         if(checkId) {
-            const newData = {
-                receivers: request.body.receivers,
-                message: request.body.message,
-                platform: request.body.platform,
-                scheduleType: request.body.scheduleType,
-                scheduleTime: {
-                    hours: request.body.hours,
-                    minutes: request.body.minutes,
-                    days: request.body.days
+            let updateData
+            let newData
+            if(put == 'status') {
+                newData = {
+                    status: request.body.status
                 }
+                updateData = await Model.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: newData })
+            }else {
+                newData = {
+                    receivers: request.body.receivers,
+                    message: request.body.message,
+                    platform: request.body.platform,
+                    scheduleType: request.body.scheduleType,
+                    scheduleTime: {
+                        hours: request.body.hours,
+                        minutes: request.body.minutes,
+                        days: request.body.days
+                    }
+                }
+                updateData = await Model.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: newData })
             }
-            const updateData = await Model.updateOne({ _id: mongoose.Types.ObjectId(id) }, { $set: newData })
             response.status(200).json({
                 status: true,
                 message: 'data was updated'
