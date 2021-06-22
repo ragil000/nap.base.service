@@ -16,8 +16,7 @@ Ini adalah salah satu service dari aplikasi penjadwalan pesan dan pengingat (not
 ### INSTALASI
 1. Proyek ini menggunakan *nodejs* dan *expressjs*  [Download dan install disini](https://nodejs.org/en/ "Download dan install disini")
 2. Ubah nama file `dotenv` menjadi `.env`, kemudian ubah isinya.
-Dari ini,
-    ```json
+```javascript
 BASE_URL=http://localhost:3000
 PORT=3000
 MONGODB_URL=[YOUR MONGODB URL]
@@ -25,7 +24,7 @@ API_KEY=[YOUR API KEY]
 JWT_KEY=[YOUR JWT KEY]
 ```
 Menjadi seperti contoh ini,
-    ```json
+```javascript
 BASE_URL=http://localhost:3000
 PORT=3000
 MONGODB_URL=mongodb://127.0.0.1:27017/nap
